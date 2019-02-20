@@ -1,4 +1,4 @@
-*{margin:0px;padding:0px;box-sizing: border-box;}
+*{margin:0px;padding:0px;box-sizing: border-box;} /*一般上来就这样写，后面方便写样式*/
 
 .token.selector,.token.punctuation,.token.property,.token.comment,.token.function{
     color:black;
