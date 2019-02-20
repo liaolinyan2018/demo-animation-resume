@@ -42,44 +42,42 @@ html{
   我需要一张白纸
 */
 `
-var n = 0
-var id = setInterval(() => {
-  n+=1
-  code.innerHTML = result.substring(0,n)
-  code.innerHTML = Prism.highlight(code.innerHTML, Prism.languages.css, 'css');
-  styleTag.innerHTML = result.substring(0,n)
-
-  if(n>=result.length){
-    window.clearInterval(id)
-    fn2()
-    fn3(result)
-  }
-},10)
-
-function fn2(){
-  var paper = document.createElement('div')
-  console.log(paper)
-  paper.id = 'paper'
-  document.body.appendChild(paper)
-}
-
-function fn3(preResult){
-  var result = 
+var result2 = 
 `#paper{
   width:200px;
   height:400px;
   background: white;
 }`
+
+writeCode('',result,() => { //writeCode call function back
+  console.log('结束了')
+  createPaper(() => {
+    console.log('paper有了')
+    writeCode(result,result2,()=>{
+      console.log('到此暂时结束')
+    })
+    
+  }); 
+})
+
+function writeCode(prefix,code,fn){
+  var codeDom = document.querySelector('#code')
   var n = 0
   var id = setInterval(() => {
-    n+=1
-    code.innerHTML = preResult + result.substring(0,n)
-    code.innerHTML = Prism.highlight(code.innerHTML, Prism.languages.css, 'css');
-    styleTag.innerHTML = preResult + result.substring(0,n)
-
-    if(n>=result.length){
+    n+=1;
+    codeDom.innerHTML = Prism.highlight(prefix + code.substring(0,n), Prism.languages.css, 'css');
+    styleTag.innerHTML = prefix + code.substring(0,n)
+    codeDom.scrollTop = codeDom.scrollHeight  //每写一句代码，codeDom元素向上滚动最大幅度
+    //console.log(codeDom.scrollTop)
+    if(n>=code.length){
       window.clearInterval(id)
+      fn.call()
     }
-},10)
-
+  },10)
+}
+function createPaper(fn){
+  var paper = document.createElement('div')
+  paper.id = 'paper'
+  document.body.appendChild(paper)
+  fn.call()
 }

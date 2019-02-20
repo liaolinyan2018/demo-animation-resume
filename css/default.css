@@ -1,3 +1,11 @@
+*{margin:0px;padding:0px;box-sizing: border-box;}
+
 .token.selector,.token.punctuation,.token.property,.token.comment,.token.function{
     color:black;
+}
+
+#code{
+    height:100vh;
+    overflow: hidden; /*hidden 跟不写overflow: hidden;外观看上去都没有滚动条，但是功能是不一样的。*/
+    /*不写overflow,element.scrollTop始终为0,overflow设置为hidden，没有滚动条，可设置element.scrollTop为任意整数值*/
 }
