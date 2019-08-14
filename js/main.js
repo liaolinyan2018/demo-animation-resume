@@ -1,4 +1,4 @@
-var result = `/*面试官你好，我叫xxx
+const result = `/*面试官你好，我叫xxx
     用文字介绍自己太单调了
     我将用动画的形式来介绍自己
     就用代码来介绍自己吧
@@ -42,7 +42,7 @@ html{
   我需要一张纸
 */
 `
-var result2 = `
+const result2 = `
 #code{
   position: fixed;
   left: 0;
@@ -69,19 +69,19 @@ var result2 = `
 
 /* 这样我就能在纸上写字啦，请看右边 */
 `
-var result3 = `
+const result3 = `
 /* 接下来把markdown变成HTML */
 `
-var result4 = `
+const result4 = `
 /* 接下来给HTML加样式 */
 `
-var result5 = `
+const result5 = `
 /* 这就是我会动的简历了*/
 /* 谢谢观看 */
 `
 
-var md = 
-`# 自我介绍
+const md =
+  `# 自我介绍
 
 我叫xxx，19xx年x月出生
 现就读于北京xx大学，大四
@@ -105,18 +105,18 @@ var md =
 邮箱 xxx@gmail.com
 `
 
-writeCode('',result,()=>{ //writeCode call function back
+writeCode('', result, () => { //writeCode call function back
   console.log('结束了')
-  createPaper(()=>{
+  createPaper(() => {
     console.log('paper造好了')
-    writeCode(result,result2,()=>{
+    writeCode(result, result2, () => {
       console.log('纸的样式加好了')
-      writeMarkdown(md,()=>{
+      writeMarkdown(md, () => {
         console.log('简历内容也写好了')
-        writeCode(result + result2,result3,()=>{
-          markdownToHtml(()=>{
+        writeCode(result + result2, result3, () => {
+          markdownToHtml(() => {
             console.log('markdown已经变成HTML')
-            writeCode(result + result2 + result3,result5,()=>{
+            writeCode(result + result2 + result3, result5, () => {
               console.log('简历完成')
             })
             /*writeCode(result + result2 + result3,result4,()=>{
@@ -128,63 +128,73 @@ writeCode('',result,()=>{ //writeCode call function back
           })
         })
       })
-    }); 
+    });
   })
 })
 
 /* 将md格式的内容加入到简历中 */
-function writeMarkdown(markdown,fn){
-  let paperContent = paper.querySelector('.content')
+function writeMarkdown(markdown, fn) {
+  let paperContent = _$('.content')
   let n = 0
   let id = setInterval(() => {
-    n+=1;
-    paperContent.innerHTML = markdown.substring(0,n);
+    n += 1
+    paperContent.innerHTML = markdown.substring(0, n)
     paperContent.scrollTop = paperContent.scrollHeight  //每写一句代码，paperContent元素向上滚动最大幅度
-    if(n>=markdown.length){
+    if (n >= markdown.length) {
       window.clearInterval(id)
       fn.call()
     }
-  },20)
+  }, 20)
 }
 
 /*将markdown转为html*/
-function markdownToHtml(fn){
-  let paperContent = document.querySelector('.content')
+function markdownToHtml(fn) {
+  let paperContent = _$('.content')
   let n = 0
   let id = setInterval(() => {
-    n+=1;
-    paperContent.innerHTML = marked(md).substring(0,n);
+    n += 1;
+    paperContent.innerHTML = marked(md).substring(0, n);
     paperContent.scrollTop = paperContent.scrollHeight  //每写一句代码，paperContent元素向上滚动最大幅度
-    if(n>=marked(md).length){
+    if (n >= marked(md).length) {
       window.clearInterval(id)
       fn.call()
     }
-  },20)
+  }, 20)
 }
-/*把code写到#code 和 #styleTag标签 里*/
-function writeCode(prefix,code,fn){
-  let codeDom = document.querySelector('#code')
+/*把code写到#code 和 #styleTag标签 里，20ms添加一个字*/
+function writeCode(prefix, code, fn) {
+  let codeDom = _$('#code')
   let n = 0
   let id = setInterval(() => {
-    n+=1;
-    codeDom.innerHTML = Prism.highlight(prefix + code.substring(0,n), Prism.languages.css, 'css');
-    styleTag.innerHTML = prefix + code.substring(0,n)
+    n += 1;
+    codeDom.innerHTML = Prism.highlight(prefix + code.substring(0, n), Prism.languages.css, 'css');
+    styleTag.innerHTML = prefix + code.substring(0, n)
     codeDom.scrollTop = codeDom.scrollHeight  //每写一句代码，codeDom元素向上滚动最大幅度
     //console.log(codeDom.scrollTop)
-    if(n>=code.length){
+    if (n >= code.length) {
       window.clearInterval(id)
       fn.call()
     }
-  },30)
+  }, 30)
 }
 
 /*造一张白纸*/
-function createPaper(fn){
-  var paper = document.createElement('div')
+function createPaper(fn) {
+  const paper = createElement('div')
   paper.id = 'paper'
-  var content = document.createElement('pre')
+  const content = createElement('pre')
   content.className = 'content'
-  paper.appendChild(content)
-  document.body.appendChild(paper)
+  appendChild(paper, content)
+  appendChild(document.body, paper)
   fn.call()
+}
+
+function _$(selector) {
+  return document.querySelector(selector)
+}
+function createElement(selector) {
+  return document.createElement(selector)
+}
+function appendChild(fatherElement, sonElement) {
+  return fatherElement.appendChild(sonElement)
 }

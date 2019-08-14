@@ -1,11 +1,16 @@
-*{margin:0px;padding:0px;box-sizing: border-box;} /*一般上来就这样写，后面方便写样式*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-.token.selector,.token.punctuation,.token.property,.token.comment,.token.function{
+.token.selector, .token.punctuation, .token.property, .token.comment, .token.function {
     color:black;
 }
 
-#code{
+#code {
     height:100vh;
-    overflow: hidden; /*hidden 跟不写overflow: hidden;外观看上去都没有滚动条，但是功能是不一样的。*/
-    /*不写overflow,element.scrollTop始终为0,overflow设置为hidden，没有滚动条，可设置element.scrollTop为任意整数值*/
+    max-width: 930px;
+    margin: 0 auto;
+    overflow: hidden;
 }
