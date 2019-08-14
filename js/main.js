@@ -60,7 +60,7 @@ const result2 = `
   align-items: center;
   padding: 8px;
 }
-#paper > .content{
+#paper > .paperContent{
   background: #feeeed;
   width: 100%;
   height: 100%;
@@ -84,13 +84,13 @@ const md =
   `# 自我介绍
 
 我叫xxx，19xx年x月出生
-现就读于北京xx大学，大四
-自学前端半年
+毕业于北京化工大学, 2019应届
+自学前端
 希望应聘前端开发岗位
 
 # 技能介绍
 
-熟悉 JavaScript CSS3 HTML5 jQuery Ajax JSON
+熟悉 JavaScript CSS3 HTML5 Promise DOM Ajax JSON
 
 # 项目介绍
 
@@ -105,90 +105,111 @@ const md =
 邮箱 xxx@gmail.com
 `
 
-writeCode('', result, () => { //writeCode call function back
-  console.log('结束了')
-  createPaper(() => {
-    console.log('paper造好了')
-    writeCode(result, result2, () => {
-      console.log('纸的样式加好了')
-      writeMarkdown(md, () => {
-        console.log('简历内容也写好了')
-        writeCode(result + result2, result3, () => {
-          markdownToHtml(() => {
-            console.log('markdown已经变成HTML')
-            writeCode(result + result2 + result3, result5, () => {
-              console.log('简历完成')
-            })
-            /*writeCode(result + result2 + result3,result4,()=>{
-              console.log('HTML样式添加好了')
-              writeCode(result + result2 + result3 + result4,result5,()=>{
-              console.log('全部结束')
-              })
-            })*/
-          })
-        })
-      })
-    });
+// 主业务逻辑
+writeCode('', result)
+  .then((data) => {
+    console.log(data)
+    return createPaper()
   })
-})
+  .then((data) => {
+    console.log(data)
+    return writeCode(result, result2)
+  })
+  .then((data) => {
+    console.log(data)
+    return writeMarkdown(md)
+  })
+  .then((data) => {
+    console.log(data)
+    return writeCode(result + result2, result3)
+  })
+  .then((data) => {
+    console.log(data)
+    return markdownToHtml()
+  })
+  .then((data) => {
+    console.log(data)
+    return writeCode(result + result2 + result3, result5)
+  })
+  .then((data) => {
+    console.log(data)
+    console.log('简历完成')
+  })
 
-/* 将md格式的内容加入到简历中 */
-function writeMarkdown(markdown, fn) {
-  let paperContent = _$('.content')
-  let n = 0
-  let id = setInterval(() => {
-    n += 1
-    paperContent.innerHTML = markdown.substring(0, n)
-    paperContent.scrollTop = paperContent.scrollHeight  //每写一句代码，paperContent元素向上滚动最大幅度
-    if (n >= markdown.length) {
-      window.clearInterval(id)
-      fn.call()
-    }
-  }, 20)
+
+// 功能函数封装，带Promise功能
+
+function writeMarkdown(markdown) {
+  console.log('开始写简历内容')
+  return new Promise((resolve, reject) => {
+    const paperContent = _$('.paperContent')
+    let n = 0
+    const id = setInterval(() => {
+      n += 1
+      paperContent.innerHTML = markdown.substring(0, n)
+      paperContent.scrollTop = paperContent.scrollHeight  //每写一句代码，paperContent元素向上滚动最大幅度
+      if (n >= markdown.length) {
+        window.clearInterval(id)
+        resolve('简历内容也写好了')
+      }
+    }, 10)
+  })
 }
 
 /*将markdown转为html*/
-function markdownToHtml(fn) {
-  let paperContent = _$('.content')
-  let n = 0
-  let id = setInterval(() => {
-    n += 1;
-    paperContent.innerHTML = marked(md).substring(0, n);
-    paperContent.scrollTop = paperContent.scrollHeight  //每写一句代码，paperContent元素向上滚动最大幅度
-    if (n >= marked(md).length) {
-      window.clearInterval(id)
-      fn.call()
-    }
-  }, 20)
+function markdownToHtml() {
+  console.log('开始将md格式转为html')
+  return new Promise((resolve, reject) => {
+    const paperContent = _$('.paperContent')
+    let n = 0
+    const id = setInterval(() => {
+      n += 1;
+      paperContent.innerHTML = marked(md).substring(0, n);
+      paperContent.scrollTop = paperContent.scrollHeight  //每写一句代码，paperContent元素向上滚动最大幅度
+      if (n >= marked(md).length) {
+        window.clearInterval(id)
+        resolve('md格式转为html结束')
+      }
+    }, 5)
+  })
 }
+
 /*把code写到#code 和 #styleTag标签 里，20ms添加一个字*/
-function writeCode(prefix, code, fn) {
-  let codeDom = _$('#code')
-  let n = 0
-  let id = setInterval(() => {
-    n += 1;
-    codeDom.innerHTML = Prism.highlight(prefix + code.substring(0, n), Prism.languages.css, 'css');
-    styleTag.innerHTML = prefix + code.substring(0, n)
-    codeDom.scrollTop = codeDom.scrollHeight  //每写一句代码，codeDom元素向上滚动最大幅度
-    //console.log(codeDom.scrollTop)
-    if (n >= code.length) {
-      window.clearInterval(id)
-      fn.call()
-    }
-  }, 30)
+function writeCode(prefix, code) {
+  console.log('writeCode begin')
+  return new Promise((resolve, reject) => {
+    const codeDom = _$('#code')
+    let n = 0
+    const id = setInterval(() => {
+      n += 1;
+      codeDom.innerHTML = Prism.highlight(prefix + code.substring(0, n), Prism.languages.css, 'css');
+      styleTag.innerHTML = prefix + code.substring(0, n)
+      codeDom.scrollTop = codeDom.scrollHeight  //每写一句代码，codeDom元素向上滚动最大幅度
+      //console.log(codeDom.scrollTop)
+      console.log('刚刚添加了一个字')
+      if (n >= code.length) {
+        window.clearInterval(id)
+        resolve('writeCode end')
+      }
+    }, 5)
+  })
 }
 
-/*造一张白纸*/
-function createPaper(fn) {
-  const paper = createElement('div')
-  paper.id = 'paper'
-  const content = createElement('pre')
-  content.className = 'content'
-  appendChild(paper, content)
-  appendChild(document.body, paper)
-  fn.call()
+/*造纸*/
+function createPaper() {
+  console.log('开始造纸')
+  return new Promise((resolve, reject) => {
+    const paper = createElement('div')
+    paper.id = 'paper'
+    const content = createElement('pre')
+    content.className = 'paperContent'
+    appendChild(paper, content)
+    appendChild(document.body, paper)
+    resolve('paper造好了')
+  })
 }
 
+// 工具函数封装
 function _$(selector) {
   return document.querySelector(selector)
 }
